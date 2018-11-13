@@ -1,7 +1,7 @@
 # Личный проект «Угадай мелодию» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дарья Янкевич](https://up.htmlacademy.ru/ecmascript/7/user/915617).
-* Наставник: `Неизвестно`.
+* Наставник: [Владимир Якушкин](https://htmlacademy.ru/profile/id126208).
 
 ---
 
