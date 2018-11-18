@@ -1,88 +1,100 @@
 'use strict';
 
-(() => {
-  const templates = document.querySelectorAll(`template`);
-  const screenWrapper = document.querySelector(`section.main`);
-  const keyCodes = {
-    ARROW_LEFT: 37,
-    ARROW_RIGHT: 39
-  };
-  const appWrapper = document.querySelector(`.app`);
-  const arrow = document.createElement(`div`);
-  arrow.classList.add(`arrows__wrap`);
-  arrow.innerHTML = `<style>
-      .arrows__wrap {
-        position: absolute;
-        top: 135px;
-        left: 50%;
-        margin-left: -56px;
-      }
-      .arrows__btn {
-        background: none;
-        border: 2px solid black;
-        padding: 5px 20px;
-      }
-    </style>
-    <button class="arrows__btn j-arrow-left"><-</button>
-    <button class="arrows__btn j-arrow-right">-></button>`;
-  appWrapper.appendChild(arrow);
+class Screens {
+  constructor() {
+    this.templates = Array.from(document.querySelectorAll(`template`));
+    this.screenWrapper = document.querySelector(`section.main`);
+    this.appWrapper = document.querySelector(`.app`);
+    this.currentScreen = 0;
+    this.keyCodes = {
+      ARROW_LEFT: 37,
+      ARROW_RIGHT: 39
+    };
 
-  const SCREEN_WELCOME = `welcome`;
-  const SCREEN_GENRE = `game-genre`;
-  const SCREEN_ARTIST = `game-artist`;
-  const SCREEN_SUCCESS = `result-success`;
-  const SCREEN_FAIL_TIME = `fail-time`;
-  const SCREEN_FAIL_TRIES = `fail-tries`;
-  const SCREEN_CONFIRM = `modal-confirm`;
-  const SCREEN_ERROR = `modal-error`;
+    const SCREEN_WELCOME = `welcome`;
+    const SCREEN_GENRE = `game-genre`;
+    const SCREEN_ARTIST = `game-artist`;
+    const SCREEN_SUCCESS = `result-success`;
+    const SCREEN_FAIL_TIME = `fail-time`;
+    const SCREEN_FAIL_TRIES = `fail-tries`;
+    const SCREEN_CONFIRM = `modal-confirm`;
+    const SCREEN_ERROR = `modal-error`;
 
-  const screenQueue = [
-    SCREEN_WELCOME,
-    SCREEN_GENRE,
-    SCREEN_ARTIST,
-    SCREEN_SUCCESS,
-    SCREEN_FAIL_TIME,
-    SCREEN_FAIL_TRIES,
-    SCREEN_CONFIRM,
-    SCREEN_ERROR
-  ];
+    this.screenQueue = [
+      SCREEN_WELCOME,
+      SCREEN_GENRE,
+      SCREEN_ARTIST,
+      SCREEN_SUCCESS,
+      SCREEN_FAIL_TIME,
+      SCREEN_FAIL_TRIES,
+      SCREEN_CONFIRM,
+      SCREEN_ERROR
+    ];
 
-  const showScreen = (activeScreen = 0) => {
-    for (let i = 0; i < screenQueue.length; i++) {
-      if (templates[i].id === screenQueue[activeScreen]) {
-        screenWrapper.innerHTML = ``;
-        const content = document.importNode(templates[i].content, true);
-        screenWrapper.appendChild(content);
-      }
-    }
-    return activeScreen;
-  };
+    this.createArrowsButtons();
+    this.bindEvents();
+  }
 
-  const changeScreenByKey = (event) => {
-    if (event.keyCode === keyCodes.ARROW_LEFT && currentScreen > 0) {
-      currentScreen = showScreen(--currentScreen);
-    }
-    if (event.keyCode === keyCodes.ARROW_RIGHT && currentScreen < screenQueue.length - 1) {
-      currentScreen = showScreen(++currentScreen);
-    }
-  };
+  createArrowsButtons() {
+    const arrows = document.createElement(`div`);
+    arrows.classList.add(`arrows__wrap`);
+    arrows.innerHTML = `<style>
+       .arrows__wrap {
+         position: absolute;
+         top: 135px;
+         left: 50%;
+         margin-left: -56px;
+       }
+       .arrows__btn {
+         background: none;
+         border: 2px solid black;
+         padding: 5px 20px;
+       }
+     </style>
+     <button class="arrows__btn j-arrow-left"><-</button>
+     <button class="arrows__btn j-arrow-right">-></button>`;
+    this.appWrapper.appendChild(arrows);
+  }
 
-  const changeScreenByArrow = () => {
+  bindEvents() {
+    const that = this;
+    document.addEventListener(`keydown`, this.changeScreenByKey.bind(that));
+
     const arrowLeft = document.querySelector(`.j-arrow-left`);
     const arrowRight = document.querySelector(`.j-arrow-right`);
     arrowLeft.addEventListener(`click`, () => {
-      if (currentScreen > 0) {
-        currentScreen = showScreen(--currentScreen);
+      if (this.currentScreen > 0) {
+        this.currentScreen = this.showScreen(--this.currentScreen);
       }
     });
     arrowRight.addEventListener(`click`, () => {
-      if (currentScreen < screenQueue.length - 1) {
-        currentScreen = showScreen(++currentScreen);
+      if (this.currentScreen < this.screenQueue.length - 1) {
+        this.currentScreen = this.showScreen(++this.currentScreen);
       }
     });
-  };
+  }
 
-  let currentScreen = showScreen();
-  document.addEventListener(`keydown`, changeScreenByKey);
-  changeScreenByArrow();
-})();
+  changeScreenByKey(event) {
+    if (event.keyCode === this.keyCodes.ARROW_LEFT && this.currentScreen > 0) {
+      this.currentScreen = this.showScreen(--this.currentScreen);
+    }
+    if (event.keyCode === this.keyCodes.ARROW_RIGHT && this.currentScreen < this.screenQueue.length - 1) {
+      this.currentScreen = this.showScreen(++this.currentScreen);
+    }
+  }
+
+  showScreen(activeScreen = 0) {
+    this.screenWrapper.innerHTML = ``;
+    const screen = this.findActiveScreen(activeScreen);
+    const content = document.importNode(screen.content, true);
+    this.screenWrapper.appendChild(content);
+    return activeScreen;
+  }
+
+  findActiveScreen(screenNumber) {
+    return this.templates.filter((template) => template.id === this.screenQueue[screenNumber])[0];
+  }
+}
+
+const screens = new Screens();
+screens.showScreen();
