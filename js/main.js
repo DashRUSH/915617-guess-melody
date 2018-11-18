@@ -57,8 +57,7 @@ class Screens {
   }
 
   bindEvents() {
-    const that = this;
-    document.addEventListener(`keydown`, this.changeScreenByKey.bind(that));
+    document.addEventListener(`keydown`, this.changeScreenByKey.bind(this));
 
     const arrowLeft = document.querySelector(`.j-arrow-left`);
     const arrowRight = document.querySelector(`.j-arrow-right`);
