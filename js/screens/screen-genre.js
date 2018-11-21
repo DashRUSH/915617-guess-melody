@@ -1,4 +1,6 @@
 import getElementFromTemplate from '../utils/get-elemet-from-template';
+import screenArtist from './screen-artist';
+import showScreen from '../controllers/show-screen';
 
 const templateGenre = `<section class="game game--genre">
     <header class="game__header">
@@ -72,11 +74,33 @@ const templateGenre = `<section class="game game--genre">
           </div>
         </div>
 
-        <button class="game__submit button" type="submit">Ответить</button>
+        <button class="game__submit button" type="submit" disabled>Ответить</button>
       </form>
     </section>
   </section>`;
 
 const ScreenGenre = getElementFromTemplate(templateGenre);
+const buttonAnswer = ScreenGenre.querySelector(`.game__submit`);
+const checkboxes = ScreenGenre.querySelectorAll(`[id^=answer-]`);
+
+const bindEvents = () => {
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener(`change`, () => {
+      buttonAnswer.disabled = !checkboxesChecked(checkboxes);
+    });
+  });
+
+  buttonAnswer.addEventListener(`click`, (event) => {
+    event.preventDefault();
+    showScreen(screenArtist);
+  });
+};
+
+const checkboxesChecked = (checkboxesAnswer) => {
+  const answers = Array.from(checkboxesAnswer);
+  return answers.filter((answer) => answer.checked === true).length > 0;
+};
+
+bindEvents();
 
 export default ScreenGenre;

@@ -1,14 +1,21 @@
-const findActiveScreen = (activeScreen) => {
-  return activeScreen;
-};
+import screenWelcome from './../screens/screen-welcome';
 
-const showScreen = (activeScreen = 0) => {
+const showScreen = (content) => {
   const screenWrapper = document.querySelector(`section.main`);
   screenWrapper.innerHTML = ``;
-  const screen = findActiveScreen(activeScreen);
-  const content = document.importNode(screen.content, true);
   screenWrapper.appendChild(content);
-  return activeScreen;
+  bindEvents(content);
+  return content;
+};
+
+const bindEvents = (screen) => {
+  const buttonBack = screen.querySelector(`.game__back`);
+  if (buttonBack) {
+    buttonBack.addEventListener(`click`, (event) => {
+      event.preventDefault();
+      showScreen(screenWelcome);
+    });
+  }
 };
 
 export default showScreen;
