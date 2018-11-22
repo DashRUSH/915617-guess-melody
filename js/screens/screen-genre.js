@@ -79,9 +79,9 @@ const templateGenre = `<section class="game game--genre">
     </section>
   </section>`;
 
-const ScreenGenre = getElementFromTemplate(templateGenre);
-const buttonAnswer = ScreenGenre.querySelector(`.game__submit`);
-const checkboxes = ScreenGenre.querySelectorAll(`[id^=answer-]`);
+const screenGenre = getElementFromTemplate(templateGenre);
+const buttonAnswer = screenGenre.querySelector(`.game__submit`);
+const checkboxes = screenGenre.querySelectorAll(`[id^=answer-]`);
 
 const bindEvents = () => {
   checkboxes.forEach((checkbox) => {
@@ -103,4 +103,4 @@ const checkboxesChecked = (checkboxesAnswer) => {
 
 bindEvents();
 
-export default ScreenGenre;
+export default screenGenre;

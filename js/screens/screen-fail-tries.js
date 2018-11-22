@@ -7,6 +7,6 @@ const templateFailTries = `<section class="result">
     <button class="result__replay" type="button">Попробовать ещё раз</button>
   </section>`;
 
-const ScreenFailTries = getElementFromTemplate(templateFailTries);
+const screenFailTries = getElementFromTemplate(templateFailTries);
 
-export default ScreenFailTries;
+export default screenFailTries;

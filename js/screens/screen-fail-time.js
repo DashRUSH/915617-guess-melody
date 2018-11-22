@@ -7,6 +7,6 @@ const templateFailTime = `<section class="result">
     <button class="result__replay" type="button">Попробовать ещё раз</button>
   </section>`;
 
-const ScreenFailTime = getElementFromTemplate(templateFailTime);
+const screenFailTime = getElementFromTemplate(templateFailTime);
 
-export default ScreenFailTime;
+export default screenFailTime;

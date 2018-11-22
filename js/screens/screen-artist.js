@@ -65,8 +65,8 @@ const templateArtist = `<section class="game game--artist">
     </section>
   </section>`;
 
-const ScreenArtist = getElementFromTemplate(templateArtist);
-const buttonArtist = ScreenArtist.querySelectorAll(`.game__artist input[type=radio]`);
+const screenArtist = getElementFromTemplate(templateArtist);
+const buttonArtist = screenArtist.querySelectorAll(`.game__artist input[type=radio]`);
 
 const bindEvents = () => {
   buttonArtist.forEach((button) => {
@@ -86,4 +86,4 @@ const bindStart = (screen) => {
 
 bindEvents();
 
-export default ScreenArtist;
+export default screenArtist;

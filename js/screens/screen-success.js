@@ -8,6 +8,6 @@ const templateSuccess = `<section class="result">
     <button class="result__replay" type="button">Сыграть ещё раз</button>
   </section>`;
 
-const ScreenSuccess = getElementFromTemplate(templateSuccess);
+const screenSuccess = getElementFromTemplate(templateSuccess);
 
-export default ScreenSuccess;
+export default screenSuccess;

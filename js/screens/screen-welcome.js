@@ -14,8 +14,8 @@ const templateWelcome = `<section class="welcome">
     <p class="welcome__text">Удачи!</p>
   </section>`;
 
-const ScreenWelcome = getElementFromTemplate(templateWelcome);
-const buttonPlay = ScreenWelcome.querySelector(`.welcome__button`);
+const screenWelcome = getElementFromTemplate(templateWelcome);
+const buttonPlay = screenWelcome.querySelector(`.welcome__button`);
 
 const bindEvents = () => {
   buttonPlay.addEventListener(`click`, () => {
@@ -25,4 +25,4 @@ const bindEvents = () => {
 
 bindEvents();
 
-export default ScreenWelcome;
+export default screenWelcome;
