@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import couuntPoints from './../controllers/count-points';
+import countPoints from './../controllers/count-points';
 
 describe(`function countPoints`, () => {
   it(`should return -1 when number of answers less than 10`, () => {
@@ -7,7 +7,7 @@ describe(`function countPoints`, () => {
       {answer: true, time: 1000},
       {answer: true, time: 100}
     ];
-    assert.equal(-1, couuntPoints(answers, 2));
+    assert.equal(-1, countPoints(answers, 2));
   });
 
   it(`should return -1 when number of attempts exhausted`, () => {
@@ -23,7 +23,7 @@ describe(`function countPoints`, () => {
       {answer: true, time: 30000},
       {answer: true, time: 30000}
     ];
-    assert.equal(-1, couuntPoints(answers, 0));
+    assert.equal(-1, countPoints(answers, 0));
   });
 
   it(`should return 10 when user won slowly`, () => {
@@ -39,7 +39,7 @@ describe(`function countPoints`, () => {
       {answer: true, time: 30000},
       {answer: true, time: 30000}
     ];
-    assert.equal(10, couuntPoints(answers, 2));
+    assert.equal(10, countPoints(answers, 2));
   });
 
   it(`should return 7 when user was wrong once`, () => {
@@ -55,7 +55,7 @@ describe(`function countPoints`, () => {
       {answer: true, time: 30000},
       {answer: true, time: 30000}
     ];
-    assert.equal(7, couuntPoints(answers, 2));
+    assert.equal(7, countPoints(answers, 2));
   });
 
   it(`should return 0 when user was fast and wrong`, () => {
@@ -71,6 +71,6 @@ describe(`function countPoints`, () => {
       {answer: true, time: 20},
       {answer: true, time: 20}
     ];
-    assert.equal(-4, couuntPoints(answers, 2));
+    assert.equal(-4, countPoints(answers, 2));
   });
 });
