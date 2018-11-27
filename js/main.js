@@ -1,4 +1,4 @@
 import showScreen from './controllers/show-screen';
-import screenWelcome from './screens/screen-welcome';
+import {INITIAL_STATE} from './data/game-gata';
 
-showScreen(screenWelcome);
+showScreen(INITIAL_STATE);
