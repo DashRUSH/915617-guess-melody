@@ -5,6 +5,7 @@ import screenGenre from './../screens/screen-genre';
 import screenArtist from './../screens/screen-artist';
 import screenFail from './../screens/screen-fail';
 import screenSuccess from './../screens/screen-success';
+import calcPoints from '../controllers/calc-points';
 import {INITIAL_STATE, QUESTIONS, allResults} from './../data/game-gata';
 
 const screens = {
@@ -22,20 +23,17 @@ const showScreen = (state) => {
 };
 
 const renderScreen = (state) => {
-  let screen = null;
   if (!state.lives) {
     state.fail = `TRIES`;
-    screen = screenFail(state.fail);
+    return screenFail(state.fail);
   } else if (state.level > 0 && state.level <= QUESTIONS.length) {
     const questionType = QUESTIONS[state.level - 1].type;
     const screenTemplate = screens[questionType];
-    screen = screenTemplate(state, QUESTIONS[state.level - 1]);
+    return screenTemplate(state, QUESTIONS[state.level - 1]);
   } else if (state.level === 0) {
-    screen = screenWelcome;
-  } else {
-    screen = screenSuccess(state, allResults);
+    return screenWelcome;
   }
-  return screen;
+  return screenSuccess(state, allResults);
 };
 
 const bindEvents = (state, screen) => {
@@ -95,8 +93,8 @@ const bindSendGenre = (state, screen) => {
 
 const checkAnswerGenre = (state, answers) => {
   let result = true;
-  let resultCount = null;
-  let answerCount = null;
+  let resultCount = 0;
+  let answerCount = 0;
   const answersAll = QUESTIONS[state.level - 1].options;
 
   for (const answer of answersAll) {
@@ -111,13 +109,13 @@ const checkAnswerGenre = (state, answers) => {
   });
 
   if (answerCount === resultCount * result) {
-    const stateNew = changeLevel(state);
-    stateNew.points += 1;
+    let stateNew = changeLevel(state);
+    stateNew = calcPoints(stateNew, true);
     showScreen(stateNew);
   } else {
     let stateNew = changeLives(state);
     stateNew = changeLevel(stateNew);
-    stateNew.points -= 2;
+    stateNew = calcPoints(stateNew, false);
     showScreen(stateNew);
   }
 };
@@ -132,13 +130,13 @@ const bindClickArtist = (state, screen) => {
     radiobutton.addEventListener(`change`, () => {
       const isRight = QUESTIONS[state.level - 1].options[radiobutton.value].answer;
       if (isRight) {
-        const stateNew = changeLevel(state);
-        stateNew.points += 1;
+        let stateNew = changeLevel(state);
+        stateNew = calcPoints(stateNew, true);
         showScreen(stateNew);
       } else {
         let stateNew = changeLives(state);
         stateNew = changeLevel(stateNew);
-        stateNew.points -= 2;
+        stateNew = calcPoints(stateNew, false);
         showScreen(stateNew);
       }
     });

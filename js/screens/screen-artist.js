@@ -1,11 +1,3 @@
-
-import showScreen from '../controllers/show-screen';
-import getRandomElement from '../utils/get-random-element';
-import screenWelcome from './screen-welcome';
-import screenSuccess from './screen-success';
-import screenFailTries from './screen-fail-tries';
-import screenFailTime from './screen-fail-time';
-
 import getElementFromTemplate from '../utils/get-elemet-from-template';
 import gamePanel from './game-panel';
 
@@ -33,26 +25,5 @@ const templateArtist = (state, question) => {
 
   return getElementFromTemplate(template);
 };
-
-// const ScreenArtist = getElementFromTemplate(templateArtist);
-// const buttonArtist = ScreenArtist.querySelectorAll(`.game__artist input[type=radio]`);
-//
-// const bindEvents = () => {
-//   buttonArtist.forEach((button) => {
-//     button.addEventListener(`change`, () => {
-//       const resultScreen = showScreen(getRandomElement([screenSuccess, screenFailTime, screenFailTries]));
-//       bindStart(resultScreen);
-//     });
-//   });
-// };
-//
-// const bindStart = (screen) => {
-//   const buttonAgain = screen.querySelector(`.result__replay`);
-//   buttonAgain.addEventListener(`click`, () => {
-//     showScreen(screenWelcome);
-//   });
-// };
-//
-// bindEvents();
 
 export default templateArtist;

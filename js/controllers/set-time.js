@@ -1,6 +1,6 @@
 const setTime = (duration) => {
-  let minutes = parseInt(duration / 60, 10);
-  let seconds = parseInt(duration % 60, 10);
+  let minutes = duration / 60;
+  let seconds = duration % 60;
 
   minutes = minutes < 10 ? `0` + minutes : minutes;
   seconds = seconds < 10 ? `0` + seconds : seconds;
