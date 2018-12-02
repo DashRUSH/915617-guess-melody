@@ -1,6 +1,4 @@
 import getElementFromTemplate from '../utils/get-elemet-from-template';
-import screenGenre from './screen-genre';
-import showScreen from '../controllers/show-screen';
 
 const templateWelcome = `<section class="welcome">
     <div class="welcome__logo"><img src="img/melody-logo.png" alt="Угадай мелодию" width="186" height="83"></div>
@@ -14,15 +12,6 @@ const templateWelcome = `<section class="welcome">
     <p class="welcome__text">Удачи!</p>
   </section>`;
 
-const ScreenWelcome = getElementFromTemplate(templateWelcome);
-const buttonPlay = ScreenWelcome.querySelector(`.welcome__button`);
+const screenWelcome = getElementFromTemplate(templateWelcome);
 
-const bindEvents = () => {
-  buttonPlay.addEventListener(`click`, () => {
-    showScreen(screenGenre);
-  });
-};
-
-bindEvents();
-
-export default ScreenWelcome;
+export default screenWelcome;

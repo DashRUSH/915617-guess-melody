@@ -1,89 +1,29 @@
 import getElementFromTemplate from '../utils/get-elemet-from-template';
-import showScreen from '../controllers/show-screen';
-import getRandomElement from '../utils/get-random-element';
-import screenWelcome from './screen-welcome';
-import screenSuccess from './screen-success';
-import screenFailTries from './screen-fail-tries';
-import screenFailTime from './screen-fail-time';
+import gamePanel from './game-panel';
 
-const templateArtist = `<section class="game game--artist">
-    <header class="game__header">
-      <a class="game__back" href="#">
-        <span class="visually-hidden">Сыграть ещё раз</span>
-        <img class="game__logo" src="img/melody-logo-ginger.png" alt="Угадай мелодию">
-      </a>
-
-      <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
-        <circle class="timer__line" cx="390" cy="390" r="370" style="filter: url(#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center" />
-      </svg>
-
-      <div class="timer__value" xmlns="http://www.w3.org/1999/xhtml">
-        <span class="timer__mins">05</span>
-        <span class="timer__dots">:</span>
-        <span class="timer__secs">00</span>
-      </div>
-
-      <div class="game__mistakes">
-        <div class="wrong"></div>
-        <div class="wrong"></div>
-        <div class="wrong"></div>
-      </div>
-    </header>
-
+const templateArtist = (state, question) => {
+  const panel = gamePanel(state);
+  const template = `<section class="game game--artist">
+    ${panel}
     <section class="game__screen">
-      <h2 class="game__title">Кто исполняет эту песню?</h2>
+      <h2 class="game__title">${question.title}</h2>
       <div class="game__track">
         <button class="track__button track__button--play" type="button"></button>
-        <audio></audio>
+        <audio src="${question.src}"></audio>
       </div>
-
       <form class="game__artist">
-        <div class="artist">
-          <input class="artist__input visually-hidden" type="radio" name="answer" value="artist-1" id="answer-1">
-          <label class="artist__name" for="answer-1">
-            <img class="artist__picture" src="http://placehold.it/134x134" alt="Пелагея">
-            Пелагея
+        ${question.options.map((audio, i) => `<div class="artist">
+          <input class="artist__input visually-hidden j-artist-answer" type="radio" name="answer" value="${i}" id="answer-${i}">
+          <label class="artist__name" for="answer-${i}">
+            <img class="artist__picture" src="${audio.image}" alt="${audio.artist}">
+            ${audio.artist}
           </label>
-        </div>
-
-        <div class="artist">
-          <input class="artist__input visually-hidden" type="radio" name="answer" value="artist-2" id="answer-2">
-          <label class="artist__name" for="answer-2">
-            <img class="artist__picture" src="http://placehold.it/134x134" alt="Пелагея">
-            Краснознаменная дивизия имени моей бабушки
-          </label>
-        </div>
-
-        <div class="artist">
-          <input class="artist__input visually-hidden" type="radio" name="answer" value="artist-3" id="answer-3">
-          <label class="artist__name" for="answer-3">
-            <img class="artist__picture" src="http://placehold.it/134x134" alt="Пелагея">
-            Lorde
-          </label>
-        </div>
+        </div>`).join(``)}
       </form>
     </section>
   </section>`;
 
-const ScreenArtist = getElementFromTemplate(templateArtist);
-const buttonArtist = ScreenArtist.querySelectorAll(`.game__artist input[type=radio]`);
-
-const bindEvents = () => {
-  buttonArtist.forEach((button) => {
-    button.addEventListener(`change`, () => {
-      const resultScreen = showScreen(getRandomElement([screenSuccess, screenFailTime, screenFailTries]));
-      bindStart(resultScreen);
-    });
-  });
+  return getElementFromTemplate(template);
 };
 
-const bindStart = (screen) => {
-  const buttonAgain = screen.querySelector(`.result__replay`);
-  buttonAgain.addEventListener(`click`, () => {
-    showScreen(screenWelcome);
-  });
-};
-
-bindEvents();
-
-export default ScreenArtist;
+export default templateArtist;
