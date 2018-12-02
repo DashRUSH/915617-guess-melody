@@ -1,4 +1,4 @@
-const changeTime = (seconds) => {
+const changeTime = (duration) => {
   if (seconds <= 0) {
     return -1;
   }

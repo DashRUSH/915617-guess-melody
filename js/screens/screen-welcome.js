@@ -12,7 +12,6 @@ const templateWelcome = `<section class="welcome">
     <p class="welcome__text">Удачи!</p>
   </section>`;
 
-const ScreenWelcome = getElementFromTemplate(templateWelcome);
+const screenWelcome = getElementFromTemplate(templateWelcome);
 
-
-export default ScreenWelcome;
+export default screenWelcome;
