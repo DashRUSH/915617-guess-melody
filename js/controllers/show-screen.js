@@ -5,7 +5,7 @@ import screenGenre from './../screens/screen-genre';
 import screenArtist from './../screens/screen-artist';
 import screenFail from './../screens/screen-fail';
 import screenSuccess from './../screens/screen-success';
-import calcPoints from '../controllers/calc-points';
+import calcPoints from './calc-points';
 import {INITIAL_STATE, QUESTIONS, allResults} from './../data/game-gata';
 
 const screens = {
