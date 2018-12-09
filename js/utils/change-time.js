@@ -1,9 +1,9 @@
 const changeTime = (duration) => {
-  if (seconds <= 0) {
+  if (duration <= 0) {
     return -1;
   }
 
-  return seconds - 1;
+  return duration - 1;
 };
 
 export default changeTime;

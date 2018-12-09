@@ -1,8 +1,11 @@
+export const COMMON_TIME = 300;
+export const LIVES = 3;
+
 export const INITIAL_STATE = Object.freeze({
   level: 0,
-  lives: 3,
+  lives: LIVES,
+  time: COMMON_TIME,
   questions: 10,
-  time: 300,
   points: 0
 });
 
