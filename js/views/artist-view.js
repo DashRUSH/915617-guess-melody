@@ -1,6 +1,10 @@
 import AbstractView from './abstract-view';
 import PanelView from './panel-view';
 import {QUESTIONS} from "../data/game-gata";
+import calcPoints from "../utils/calc-points";
+import renderScreen from "../utils/render-screen";
+import changeLives from "../utils/change-lives";
+import changeLevel from "../utils/change-level";
 
 export default class ArtistView extends AbstractView {
   constructor(state, question) {
@@ -43,5 +47,17 @@ export default class ArtistView extends AbstractView {
     });
   }
 
-  checkAnswerArtist() {}
+  checkAnswerArtist(state, isRight) {
+    let stateNew = state;
+    let success;
+    if (isRight) {
+      success = true;
+    } else {
+      success = false;
+      stateNew = changeLives(stateNew);
+    }
+    stateNew = changeLevel(stateNew);
+    stateNew = calcPoints(stateNew, success);
+    renderScreen(stateNew);
+  }
 }

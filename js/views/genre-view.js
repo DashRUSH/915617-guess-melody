@@ -1,5 +1,10 @@
 import AbstractView from './abstract-view';
 import PanelView from './panel-view';
+import {QUESTIONS} from "../data/game-gata";
+import calcPoints from "../utils/calc-points";
+import renderScreen from "../utils/render-screen";
+import changeLives from "../utils/change-lives";
+import changeLevel from "../utils/change-level";
 
 export default class GenreView extends AbstractView {
   constructor(state, question) {
@@ -50,5 +55,34 @@ export default class GenreView extends AbstractView {
     });
   }
 
-  checkAnswerGenre() {}
+  checkAnswerGenre(state, answers) {
+    let result = true;
+    let resultCount = 0;
+    let answerCount = 0;
+    const answersAll = QUESTIONS[state.level - 1].options;
+    let success;
+
+    for (const answer of answersAll) {
+      if (answer.answer) {
+        answerCount++;
+      }
+    }
+
+    answers.forEach((answer) => {
+      resultCount += QUESTIONS[state.level - 1].options[answer.value].answer;
+      result *= QUESTIONS[state.level - 1].options[answer.value].answer;
+    });
+
+    let stateNew = state;
+    if (answerCount === resultCount * result) {
+      success = true;
+    } else {
+      success = false;
+      stateNew = changeLives(stateNew);
+    }
+    stateNew = changeLevel(stateNew);
+    stateNew = calcPoints(stateNew, success);
+
+    renderScreen(stateNew);
+  }
 }
