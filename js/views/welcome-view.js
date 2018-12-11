@@ -1,6 +1,14 @@
-import getElementFromTemplate from '../utils/get-elemet-from-template';
+import AbstractView from './abstract-view';
+import {INITIAL_STATE} from '../data/game-gata';
 
-const templateWelcome = `<section class="welcome">
+export default class WelcomeView extends AbstractView {
+  constructor() {
+    super();
+    this.state = INITIAL_STATE;
+  }
+
+  get template() {
+    return `<section class="welcome">
     <div class="welcome__logo"><img src="img/melody-logo.png" alt="Угадай мелодию" width="186" height="83"></div>
     <button class="welcome__button"><span class="visually-hidden">Начать игру</span></button>
     <h2 class="welcome__rules-title">Правила игры</h2>
@@ -11,7 +19,15 @@ const templateWelcome = `<section class="welcome">
     </ul>
     <p class="welcome__text">Удачи!</p>
   </section>`;
+  }
 
-const screenWelcome = getElementFromTemplate(templateWelcome);
+  bindEvents() {
+    const buttonPlay = this.element.querySelector(`.welcome__button`);
 
-export default screenWelcome;
+    buttonPlay.addEventListener(`click`, () => {
+      this.bindClickPlay();
+    });
+  }
+
+  bindClickPlay() {}
+}

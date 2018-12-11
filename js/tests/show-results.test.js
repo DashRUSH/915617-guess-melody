@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import showResults from './../controllers/show-results';
+import showResults from '../utils/show-results';
 
 describe(`function showResults`, () => {
   it(`should return message about time`, () => {

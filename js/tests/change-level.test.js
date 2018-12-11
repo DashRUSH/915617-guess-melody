@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import changeLevel from './../controllers/change-level';
+import changeLevel from '../utils/change-level';
 
 describe(`function changeLevel`, () => {
   it(`should return 4 when current level is 3`, () => {
