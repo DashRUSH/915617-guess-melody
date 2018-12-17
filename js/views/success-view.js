@@ -1,13 +1,13 @@
 import AbstractView from './abstract-view';
 import inclineNouns from '../utils/incline-nouns';
 import showResults from '../utils/show-results';
-import {LIVES} from "../data/game-gata";
+import {LIVES} from "../data/game-data";
 
 export default class SuccessView extends AbstractView {
-  constructor(state, statistic) {
+  constructor(state) {
     super();
     this.state = state;
-    this.statistic = statistic;
+    this.statistic = this.state.statistic;
     this._errors = LIVES - this.state.lives;
   }
 

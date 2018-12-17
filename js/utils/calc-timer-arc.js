@@ -1,4 +1,4 @@
-import {COMMON_TIME} from './../data/game-gata';
+import {COMMON_TIME} from './../data/game-data';
 
 /**
  * Функция, которая задаёт длину индикатора таймера

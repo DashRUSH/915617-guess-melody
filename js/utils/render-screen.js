@@ -4,7 +4,7 @@ import screenGenre from '../controllers/genre-controller';
 import screenArtist from '../controllers/artist-controller';
 import screenSuccess from '../controllers/success-controller';
 import screenFail from '../controllers/fail-controller';
-import {QUESTIONS, allResults} from "../data/game-gata";
+import {QUESTIONS, allResults} from "../data/game-data";
 
 const screens = {
   'artist': screenArtist,

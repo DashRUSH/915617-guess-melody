@@ -1,5 +1,5 @@
 import AbstractView from './abstract-view';
-import {FAIL} from '../data/game-gata';
+import {FAIL} from '../data/game-data';
 
 export default class FailView extends AbstractView {
   constructor(type) {

@@ -1,7 +1,7 @@
 import AbstractView from './abstract-view';
 import calcCircumference from '../utils/calc-circumference';
 import setTime from '../utils/set-time';
-import {LIVES} from "../data/game-gata";
+import {LIVES} from "../data/game-data";
 
 export default class PanelView extends AbstractView {
   constructor(state) {
@@ -31,6 +31,7 @@ export default class PanelView extends AbstractView {
       </div>
 
       <div class="game__mistakes">
+        ${LIVES - this.state.lives}
         ${new Array(LIVES - this.state.lives)
       .fill(`<div class="wrong"></div>`)
       .join(``)}
