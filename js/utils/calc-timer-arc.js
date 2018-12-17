@@ -2,17 +2,17 @@ import {COMMON_TIME} from './../data/game-data';
 
 /**
  * Функция, которая задаёт длину индикатора таймера
- * @param {object} screen - экран
  * @param {number} time - текущее время
+ * @return {number} strokeDashoffset - значение stroke-dashoffset
  */
-const calcTimerArc = (screen, time) => {
-  const timerCircle = screen.querySelector(`.j-timer-radius`);
+const calcTimerArc = (time) => {
+  const timerCircle = document.querySelector(`.j-timer-radius`);
   if (!timerCircle) {
-    return;
+    return 0;
   }
 
   const circumference = Math.round(2 * Math.PI * timerCircle.getAttribute(`r`));
-  timerCircle.style.strokeDashoffset = time / COMMON_TIME * circumference;
+  return circumference - time * circumference / COMMON_TIME;
 };
 
 export default calcTimerArc;

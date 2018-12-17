@@ -1,7 +1,7 @@
-import WelcomeView from '../views/welcome-view';
 import Application from '../application';
+import WelcomeView from '../views/welcome-view';
 
-export default class GameScreen {
+export default class WelcomeScreen {
   constructor() {
     this._view = new WelcomeView();
     this._view.bindClickPlay = () => {

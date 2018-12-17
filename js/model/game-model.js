@@ -1,4 +1,5 @@
-import {INITIAL_STATE, QUESTIONS, allResults} from "../data/game-data";
+import {INITIAL_STATE, COMMON_TIME, FAST_ANSWER, QUESTIONS, allResults} from '../data/game-data';
+import Timer from '../presenter/timer-presenter';
 
 export default class GameModel {
   constructor() {
@@ -23,6 +24,8 @@ export default class GameModel {
 
   start() {
     this._state = INITIAL_STATE;
+    this._time = new Timer(this._state.time);
+    this._answerTime = [COMMON_TIME];
   }
 
   changeLevel() {
@@ -36,21 +39,28 @@ export default class GameModel {
     this._state.lives -= 1;
   }
 
-  setFailType(type) {
-    this._state = Object.assign({}, this._state, {
-      fail: type
-    });
-  }
-
-  calcPoints(success) {
+  calcPoints(success, time) {
     if (success) {
-      this._state.points += 1;
+      const timeDiff = this._answerTime[this._state.level - 1] - time;
+      if (timeDiff < FAST_ANSWER) {
+        this._state.points += 2;
+        this._state.fast++;
+      } else {
+        this._state.points += 1;
+      }
     } else {
       this._state.points -= 2;
     }
+    this._answerTime.push(time);
   }
 
   getStatistic() {
     this._state.statistic = allResults;
+  }
+
+  tick() {
+    const tick = this._time.tick();
+    this._state.time = tick;
+    return tick;
   }
 }

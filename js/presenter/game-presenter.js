@@ -1,13 +1,9 @@
+import Application from '../application';
 import GameView from '../views/game-view';
-// import PanelView from '../views/panel-view';
-import WelcomeView from '../views/welcome-view';
+import TimerView from '../views/timer-view';
 import ArtistView from '../views/artist-view';
 import GenreView from '../views/genre-view';
-import FailView from '../views/fail-view';
-import SuccessView from '../views/success-view';
-// import GameModel from '../model/game-model';
-// import Application from '../application';
-import {QUESTIONS} from '../data/game-data';
+import {QUESTIONS, ONE_SECOND} from '../data/game-data';
 import showScreen from '../utils/show-screen';
 
 export default class GameScreen {
@@ -30,53 +26,67 @@ export default class GameScreen {
     const level = this.model.level;
     if (!this.model.state.lives) {
       this.model.state.fail = `TRIES`;
-      this._view = new FailView(this.model.state.fail);
+      Application.showFail(this.model.state.fail);
     } else if (!level) {
-      this._view = new WelcomeView();
+      Application.showWelcome();
     } else if (level <= QUESTIONS.length) {
       switch (currentQuestion.type) {
         case `artist`:
           this._questionScreen = new ArtistView(this.model, currentQuestion).template;
           this._view = new GameView(this.model.state, this._questionScreen, currentQuestion.type);
+          showScreen(this._view.element);
+          this.startTimer();
           break;
         case `genre`:
           this._questionScreen = new GenreView(this.model, currentQuestion).template;
           this._view = new GameView(this.model.state, this._questionScreen, currentQuestion.type);
+          showScreen(this._view.element);
+          this.startTimer();
           break;
         default:
           throw new Error(`Неизвестный тип: ${currentQuestion.type}`);
       }
     } else {
       this.model.getStatistic();
-      this._view = new SuccessView(this.model.state);
-      // throw new Error(`Нет данных, уровень: ${level}`);
+      Application.showResult(this.model.state);
     }
     this.bindEvents();
   }
 
   changeScreen() {
+    this.stopTimer();
     this.selectScreen();
-    showScreen(this._view.element);
+  }
+
+  startTimer() {
+    this.model._timer = setTimeout(() => {
+      const time = this.model.tick();
+      if (time < 0) {
+        this.stopTimer();
+        this.model.state.fail = `TIME`;
+        Application.showFail(this.model.state.fail);
+      } else {
+        this.startTimer();
+        this.updateTimer();
+      }
+    }, ONE_SECOND);
+  }
+
+  stopTimer() {
+    clearTimeout(this.model._timer);
+  }
+
+  updateTimer() {
+    const oldTimer = this._view.element.querySelector(`.j-timer`);
+    const header = oldTimer.parentNode;
+    const newTimer = new TimerView(this.model._time).element;
+    header.replaceChild(newTimer, oldTimer);
   }
 
   bindEvents() {
-    this.bindClickPlay();
     this.bindEventsGenre();
     this.bindEventsArtist();
-    this.bindClickReply();
     this.bindClickReplyLink();
-  }
-
-  bindClickPlay() {
-    const buttonPlay = this.element.querySelector(`.welcome__button`);
-    if (!buttonPlay) {
-      return;
-    }
-
-    buttonPlay.addEventListener(`click`, () => {
-      this.setScreenView();
-      showScreen(this._view.element);
-    });
   }
 
   bindEventsGenre() {
@@ -98,7 +108,7 @@ export default class GameScreen {
     buttonAnswer.addEventListener(`click`, (event) => {
       event.preventDefault();
       const answers = Array.from(checkedCheckboxes);
-      this.checkAnswerGenre(answers);
+      this.checkAnswerGenre(answers, this.model._time.time);
     });
   }
 
@@ -111,21 +121,8 @@ export default class GameScreen {
     radioButtons.forEach((radiobutton) => {
       radiobutton.addEventListener(`change`, () => {
         const isRight = QUESTIONS[this.model.state.level - 1].options[radiobutton.value].answer;
-        this.checkAnswerArtist(isRight);
+        this.checkAnswerArtist(isRight, this.model._time.time);
       });
-    });
-  }
-
-  bindClickReply() {
-    const buttonReply = this.element.querySelector(`.result__replay`);
-    if (!buttonReply) {
-      return;
-    }
-
-    buttonReply.addEventListener(`click`, (event) => {
-      event.preventDefault();
-      this.model.start();
-      this.changeScreen();
     });
   }
 
@@ -137,12 +134,12 @@ export default class GameScreen {
 
     linkReply.addEventListener(`click`, (event) => {
       event.preventDefault();
-      this.model.start();
-      this.changeScreen();
+      this.stopTimer();
+      Application.showWelcome();
     });
   }
 
-  checkAnswerGenre(answers) {
+  checkAnswerGenre(answers, time) {
     let result = true;
     let resultCount = 0;
     let answerCount = 0;
@@ -166,10 +163,10 @@ export default class GameScreen {
       success = false;
       this.model.changeLives();
     }
-    this.showNextLevel(success);
+    this.showNextLevel(success, time);
   }
 
-  checkAnswerArtist(isRight) {
+  checkAnswerArtist(isRight, time) {
     let success;
     if (isRight) {
       success = true;
@@ -177,12 +174,12 @@ export default class GameScreen {
       success = false;
       this.model.changeLives();
     }
-    this.showNextLevel(success);
+    this.showNextLevel(success, time);
   }
 
-  showNextLevel(success) {
+  showNextLevel(success, time) {
+    this.model.calcPoints(success, time);
     this.model.changeLevel();
-    this.model.calcPoints(success);
     this.changeScreen();
   }
 }
