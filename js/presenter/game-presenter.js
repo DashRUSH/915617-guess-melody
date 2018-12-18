@@ -32,17 +32,16 @@ export default class GameScreen {
     if (!this.model.state.lives) {
       this.model.state.fail = `TRIES`;
       Application.showFail(this.model.state.fail);
-      return `Fail Tries`;
+      return;
     } else if (!level) {
       Application.showWelcome();
-      return `Welcome`;
+      return;
     } else if (level <= QUESTIONS.length) {
       this.selectQuestionScreen(currentQuestion);
-      return `Question`;
+      return;
     }
     this.model.getStatistic();
     Application.showResult(this.model.state);
-    return `Result`;
   }
 
   selectQuestionScreen(question) {
@@ -74,7 +73,7 @@ export default class GameScreen {
   startTimer() {
     this.model._timer = setTimeout(() => {
       this.model.tick();
-      const time = this.model.gettime();
+      const time = this.model.getTime();
       if (time < TIME_IS_EMPTY) {
         this.model.state.fail = `TIME`;
         Application.showFail(this.model.state.fail);

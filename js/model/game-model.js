@@ -42,16 +42,16 @@ export default class GameModel {
   calcPoints(success, time) {
     if (success) {
       const timeDiff = this._answerTime[this._state.level - 1] - time;
+      this._answerTime.push(time);
       if (timeDiff < FAST_ANSWER) {
         this._state.points += Points.IS_FAST;
         this._state.fast++;
-      } else {
-        this._state.points += Points.IS_CORRECT;
+        return;
       }
-    } else {
-      this._state.points += Points.IS_INCORRECT;
+      this._state.points += Points.IS_CORRECT;
+      return;
     }
-    this._answerTime.push(time);
+    this._state.points += Points.IS_INCORRECT;
   }
 
   getStatistic() {
@@ -62,7 +62,7 @@ export default class GameModel {
     this._state.time = this._time.tick();
   }
 
-  gettime() {
+  getTime() {
     return this._state.time;
   }
 }
