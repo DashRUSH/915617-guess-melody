@@ -5,7 +5,6 @@ export default class GenreView extends AbstractView {
     super();
     this.state = state;
     this._question = question;
-    this.bindEvents();
   }
 
   get template() {

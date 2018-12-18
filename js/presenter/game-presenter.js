@@ -33,10 +33,12 @@ export default class GameScreen {
       this.model.state.fail = `TRIES`;
       Application.showFail(this.model.state.fail);
       return;
-    } else if (!level) {
+    }
+    if (!level) {
       Application.showWelcome();
       return;
-    } else if (level <= QUESTIONS.length) {
+    }
+    if (level <= QUESTIONS.length) {
       this.selectQuestionScreen(currentQuestion);
       return;
     }
@@ -48,15 +50,14 @@ export default class GameScreen {
     switch (question.type) {
       case `artist`:
         this._questionScreen = new ArtistView(this.model, question).template;
-        this.showQuestionScreen(this.model.state, this._questionScreen, question.type);
         break;
       case `genre`:
         this._questionScreen = new GenreView(this.model, question).template;
-        this.showQuestionScreen(this.model.state, this._questionScreen, question.type);
         break;
       default:
         throw new Error(`Неизвестный тип: ${question.type}`);
     }
+    this.showQuestionScreen(this.model.state, this._questionScreen, question.type);
   }
 
   showQuestionScreen(state, questionScreen, type) {
@@ -176,12 +177,8 @@ export default class GameScreen {
     this.showNextLevel(success, time);
   }
 
-  checkAnswerArtist(isRight, time) {
-    let success;
-    if (isRight) {
-      success = true;
-    } else {
-      success = false;
+  checkAnswerArtist(success, time) {
+    if (!success) {
       this.model.changeLives();
     }
     this.showNextLevel(success, time);
