@@ -1,8 +1,14 @@
 export const COMMON_TIME = 300;
+export const TIME_IS_EMPTY = 0;
 export const LIVES = 3;
 export const ONE_SECOND = 1000;
 export const TIMER_RADIUS = 370;
 export const FAST_ANSWER = 30;
+export const Points = {
+  IS_FAST: 2,
+  IS_CORRECT: 1,
+  IS_INCORRECT: -2
+};
 
 export const INITIAL_STATE = Object.freeze({
   level: 0,

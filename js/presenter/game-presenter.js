@@ -3,7 +3,7 @@ import GameView from '../views/game-view';
 import TimerView from '../views/timer-view';
 import ArtistView from '../views/artist-view';
 import GenreView from '../views/genre-view';
-import {QUESTIONS, ONE_SECOND} from '../data/game-data';
+import {QUESTIONS, ONE_SECOND, TIME_IS_EMPTY} from '../data/game-data';
 import showScreen from '../utils/show-screen';
 
 export default class GameScreen {
@@ -22,35 +22,48 @@ export default class GameScreen {
   }
 
   selectScreen() {
-    const currentQuestion = this.model.question;
+    this.setScreen();
+    this.bindEvents();
+  }
+
+  setScreen() {
     const level = this.model.level;
+    const currentQuestion = this.model.question;
     if (!this.model.state.lives) {
       this.model.state.fail = `TRIES`;
       Application.showFail(this.model.state.fail);
+      return `Fail Tries`;
     } else if (!level) {
       Application.showWelcome();
+      return `Welcome`;
     } else if (level <= QUESTIONS.length) {
-      switch (currentQuestion.type) {
-        case `artist`:
-          this._questionScreen = new ArtistView(this.model, currentQuestion).template;
-          this._view = new GameView(this.model.state, this._questionScreen, currentQuestion.type);
-          showScreen(this._view.element);
-          this.startTimer();
-          break;
-        case `genre`:
-          this._questionScreen = new GenreView(this.model, currentQuestion).template;
-          this._view = new GameView(this.model.state, this._questionScreen, currentQuestion.type);
-          showScreen(this._view.element);
-          this.startTimer();
-          break;
-        default:
-          throw new Error(`Неизвестный тип: ${currentQuestion.type}`);
-      }
-    } else {
-      this.model.getStatistic();
-      Application.showResult(this.model.state);
+      this.selectQuestionScreen(currentQuestion);
+      return `Question`;
     }
-    this.bindEvents();
+    this.model.getStatistic();
+    Application.showResult(this.model.state);
+    return `Result`;
+  }
+
+  selectQuestionScreen(question) {
+    switch (question.type) {
+      case `artist`:
+        this._questionScreen = new ArtistView(this.model, question).template;
+        this.showQuestionScreen(this.model.state, this._questionScreen, question.type);
+        break;
+      case `genre`:
+        this._questionScreen = new GenreView(this.model, question).template;
+        this.showQuestionScreen(this.model.state, this._questionScreen, question.type);
+        break;
+      default:
+        throw new Error(`Неизвестный тип: ${question.type}`);
+    }
+  }
+
+  showQuestionScreen(state, questionScreen, type) {
+    this._view = new GameView(state, questionScreen, type);
+    showScreen(this._view.element);
+    this.startTimer();
   }
 
   changeScreen() {
@@ -60,9 +73,9 @@ export default class GameScreen {
 
   startTimer() {
     this.model._timer = setTimeout(() => {
-      const time = this.model.tick();
-      if (time < 0) {
-        this.stopTimer();
+      this.model.tick();
+      const time = this.model.gettime();
+      if (time < TIME_IS_EMPTY) {
         this.model.state.fail = `TIME`;
         Application.showFail(this.model.state.fail);
       } else {
@@ -144,7 +157,6 @@ export default class GameScreen {
     let resultCount = 0;
     let answerCount = 0;
     const answersAll = QUESTIONS[this.model.state.level - 1].options;
-    let success;
 
     for (const answer of answersAll) {
       if (answer.answer) {
@@ -157,12 +169,11 @@ export default class GameScreen {
       result *= QUESTIONS[this.model.state.level - 1].options[answer.value].answer;
     });
 
-    if (answerCount === resultCount * result) {
-      success = true;
-    } else {
-      success = false;
+    const success = answerCount === resultCount * result;
+    if (!success) {
       this.model.changeLives();
     }
+
     this.showNextLevel(success, time);
   }
 

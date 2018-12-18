@@ -1,4 +1,4 @@
-import {INITIAL_STATE, COMMON_TIME, FAST_ANSWER, QUESTIONS, allResults} from '../data/game-data';
+import {INITIAL_STATE, COMMON_TIME, FAST_ANSWER, QUESTIONS, allResults, Points} from '../data/game-data';
 import Timer from '../presenter/timer-presenter';
 
 export default class GameModel {
@@ -43,13 +43,13 @@ export default class GameModel {
     if (success) {
       const timeDiff = this._answerTime[this._state.level - 1] - time;
       if (timeDiff < FAST_ANSWER) {
-        this._state.points += 2;
+        this._state.points += Points.IS_FAST;
         this._state.fast++;
       } else {
-        this._state.points += 1;
+        this._state.points += Points.IS_CORRECT;
       }
     } else {
-      this._state.points -= 2;
+      this._state.points += Points.IS_INCORRECT;
     }
     this._answerTime.push(time);
   }
@@ -59,8 +59,10 @@ export default class GameModel {
   }
 
   tick() {
-    const tick = this._time.tick();
-    this._state.time = tick;
-    return tick;
+    this._state.time = this._time.tick();
+  }
+
+  gettime() {
+    return this._state.time;
   }
 }

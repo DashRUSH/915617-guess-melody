@@ -1,3 +1,5 @@
+import {TIME_IS_EMPTY} from '../data/game-data';
+
 export default class Timer {
   constructor(time) {
     if (typeof time !== `number` || time < 0) {
@@ -12,8 +14,7 @@ export default class Timer {
   }
 
   tick() {
-    const TIME_ISEMPTY = 0;
-    if (this.time >= TIME_ISEMPTY) {
+    if (this.time >= TIME_IS_EMPTY) {
       this._time--;
     }
     return this._time;
