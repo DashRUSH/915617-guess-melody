@@ -1,5 +1,5 @@
 import AbstractView from './abstract-view';
-import {FAIL} from '../data/game-gata';
+import {FAIL} from '../data/game-data';
 
 export default class FailView extends AbstractView {
   constructor(type) {
@@ -15,4 +15,11 @@ export default class FailView extends AbstractView {
     <button class="result__replay" type="button">Попробовать ещё раз</button>
   </section>`;
   }
+
+  bindEvents() {
+    const buttonReplay = this.element.querySelector(`.result__replay`);
+    buttonReplay.addEventListener(`click`, () => this.bindClickReplay());
+  }
+
+  bindClickReplay() {}
 }

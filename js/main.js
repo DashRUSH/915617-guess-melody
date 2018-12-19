@@ -1,4 +1,3 @@
-import showScreen from './utils/show-screen';
-import welcomeScreen from './controllers/welcome-controller';
+import Application from './application';
 
-showScreen(welcomeScreen().element);
+Application.showWelcome();
