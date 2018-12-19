@@ -2,8 +2,8 @@ import Application from '../application';
 import SuccessView from '../views/success-view';
 
 export default class SuccessScreen {
-  constructor(state) {
-    this._view = new SuccessView(state);
+  constructor(state, statistic) {
+    this._view = new SuccessView(state, statistic);
     this._view.bindClickReplay = () => {
       Application.showWelcome();
     };

@@ -44,7 +44,6 @@ export default class GameScreen {
       this.selectQuestionScreen(currentQuestion);
       return;
     }
-    this.model.getStatistic();
     Application.showResult(this.model.state);
   }
 

@@ -5,10 +5,10 @@ import setTime from '../utils/set-time';
 import {LIVES, COMMON_TIME} from '../data/game-data';
 
 export default class SuccessView extends AbstractView {
-  constructor(state) {
+  constructor(state, statistic) {
     super();
     this.state = state;
-    this.statistic = this.state.statistic;
+    this.statistic = this.parseStatistic(statistic);
     this._errors = LIVES - this.state.lives;
     this._usetTime = setTime(COMMON_TIME - this.state.time);
     this._userMinutes = this._usetTime.minutes === `00` ? `` :
@@ -38,4 +38,10 @@ export default class SuccessView extends AbstractView {
   }
 
   bindClickReplay() {}
+
+  parseStatistic(statistic) {
+    return statistic.map((player) => {
+      return player.points;
+    });
+  }
 }
