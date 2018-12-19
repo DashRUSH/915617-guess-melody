@@ -1,9 +1,9 @@
-import {INITIAL_STATE, COMMON_TIME, FAST_ANSWER, QUESTIONS, allResults, Points} from '../data/game-data';
+import {INITIAL_STATE, COMMON_TIME, FAST_ANSWER, allResults, Points} from '../data/game-data';
 import Timer from '../presenter/timer-presenter';
 
 export default class GameModel {
-  constructor() {
-    this.start();
+  constructor(questions) {
+    this.start(questions);
   }
 
   get state() {
@@ -18,12 +18,17 @@ export default class GameModel {
     return this._state.lives;
   }
 
-  get question() {
-    return QUESTIONS[this._state.level - 1];
+  get questions() {
+    return this._questions;
   }
 
-  start() {
+  get question() {
+    return this._questions[this._state.level - 1];
+  }
+
+  start(questions) {
     this._state = INITIAL_STATE;
+    this._questions = questions;
     this._time = new Timer(this._state.time);
     this._answerTime = [COMMON_TIME];
   }

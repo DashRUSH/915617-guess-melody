@@ -1,9 +1,9 @@
 import Application from '../application';
-import FailView from '../views/fail-view';
+import ErrorView from '../views/error-view';
 
-export default class FailScreen {
-  constructor(type) {
-    this._view = new FailView(type);
+export default class ErrorScreen {
+  constructor(error) {
+    this._view = new ErrorView(error);
     this._view.bindClickReplay = () => {
       Application.start();
     };
