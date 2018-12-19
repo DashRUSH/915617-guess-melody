@@ -3,7 +3,7 @@ import GameView from '../views/game-view';
 import TimerView from '../views/timer-view';
 import ArtistView from '../views/artist-view';
 import GenreView from '../views/genre-view';
-import {QUESTIONS, ONE_SECOND, TIME_IS_EMPTY} from '../data/game-data';
+import {ONE_SECOND, TIME_IS_EMPTY} from '../data/game-data';
 import showScreen from '../utils/show-screen';
 
 export default class GameScreen {
@@ -27,9 +27,11 @@ export default class GameScreen {
   }
 
   setScreen() {
+    const lives = this.model.state.lives;
     const level = this.model.level;
+    const questions = this.model.questions;
     const currentQuestion = this.model.question;
-    if (!this.model.state.lives) {
+    if (!lives) {
       this.model.state.fail = `TRIES`;
       Application.showFail(this.model.state.fail);
       return;
@@ -38,7 +40,7 @@ export default class GameScreen {
       Application.showWelcome();
       return;
     }
-    if (level <= QUESTIONS.length) {
+    if (level <= questions.length) {
       this.selectQuestionScreen(currentQuestion);
       return;
     }
@@ -54,8 +56,6 @@ export default class GameScreen {
       case `genre`:
         this._questionScreen = new GenreView(this.model, question).template;
         break;
-      default:
-        throw new Error(`Неизвестный тип: ${question.type}`);
     }
     this.showQuestionScreen(this.model.state, this._questionScreen, question.type);
   }
@@ -131,9 +131,10 @@ export default class GameScreen {
       return;
     }
 
+    const questions = this.model.questions;
     radioButtons.forEach((radiobutton) => {
       radiobutton.addEventListener(`change`, () => {
-        const isRight = QUESTIONS[this.model.state.level - 1].options[radiobutton.value].answer;
+        const isRight = questions[this.model.state.level - 1].options[radiobutton.value].answer;
         this.checkAnswerArtist(isRight, this.model._time.time);
       });
     });
@@ -148,7 +149,7 @@ export default class GameScreen {
     linkReply.addEventListener(`click`, (event) => {
       event.preventDefault();
       this.stopTimer();
-      Application.showWelcome();
+      Application.start();
     });
   }
 
@@ -156,7 +157,8 @@ export default class GameScreen {
     let result = true;
     let resultCount = 0;
     let answerCount = 0;
-    const answersAll = QUESTIONS[this.model.state.level - 1].options;
+    const questions = this.model.questions;
+    const answersAll = questions[this.model.state.level - 1].options;
 
     for (const answer of answersAll) {
       if (answer.answer) {
@@ -165,8 +167,8 @@ export default class GameScreen {
     }
 
     answers.forEach((answer) => {
-      resultCount += QUESTIONS[this.model.state.level - 1].options[answer.value].answer;
-      result *= QUESTIONS[this.model.state.level - 1].options[answer.value].answer;
+      resultCount += questions[this.model.state.level - 1].options[answer.value].answer;
+      result *= questions[this.model.state.level - 1].options[answer.value].answer;
     });
 
     const success = answerCount === resultCount * result;

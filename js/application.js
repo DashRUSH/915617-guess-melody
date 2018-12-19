@@ -1,11 +1,23 @@
+import Loader from './loader/loader';
 import WelcomeScreen from './presenter/welcome-presenter';
 import showScreen from './utils/show-screen';
 import GameModel from './model/game-model';
 import GameScreen from './presenter/game-presenter';
 import FailScreen from './presenter/fail-presenter';
 import SuccessScreen from './presenter/success-presenter';
+import ErrorScreen from './presenter/error-presenter';
 
+let questions;
 export default class Application {
+  static start() {
+    Loader.loadData()
+      .then((data) => {
+        questions = data;
+      })
+      .then(Application.showWelcome)
+      .catch(Application.showError);
+  }
+
   static showWelcome() {
     const welcome = new WelcomeScreen();
 
@@ -13,7 +25,7 @@ export default class Application {
   }
 
   static showGame() {
-    const model = new GameModel();
+    const model = new GameModel(questions);
     const gameScreen = new GameScreen(model);
 
     showScreen(gameScreen.element);
@@ -29,5 +41,11 @@ export default class Application {
     const successScreen = new SuccessScreen(state);
 
     showScreen(successScreen.element);
+  }
+
+  static showError(error) {
+    const errorScreen = new ErrorScreen(error);
+
+    showScreen(errorScreen.element);
   }
 }
