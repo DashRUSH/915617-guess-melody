@@ -2,15 +2,12 @@ const adaptServerData = (data) => {
   return data.map((level) => {
     switch (level.type) {
       case `artist`:
-        level = preprocessQuestionArtist(level);
-        break;
+        return preprocessQuestionArtist(level);
       case `genre`:
-        level = preprocessQuestionGenre(level);
-        break;
+        return preprocessQuestionGenre(level);
       default:
         throw new Error(`Неизвестный тип: ${level.type}`);
     }
-    return level;
   });
 };
 

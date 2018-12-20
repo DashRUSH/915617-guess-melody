@@ -1,4 +1,5 @@
 import AbstractView from './abstract-view';
+import {DEBUG, DEBUG_STYLE} from '../settings';
 
 export default class GenreView extends AbstractView {
   constructor(state, question) {
@@ -11,7 +12,7 @@ export default class GenreView extends AbstractView {
     return `<section class="game__screen">
     <h2 class="game__title">${this._question.title}</h2>
     <form class="game__tracks j-genre-form">
-      ${this._question.options.map((audio, i) => `<div class="track">
+      ${this._question.options.map((audio, i) => `<div class="track" ${DEBUG && !audio.answer ? DEBUG_STYLE : ``}>
         <button class="track__button track__button--play" type="button"></button>
         <div class="track__status">
           <audio src="${audio.src}"></audio>

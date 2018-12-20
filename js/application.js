@@ -6,6 +6,7 @@ import GameScreen from './presenter/game-presenter';
 import FailScreen from './presenter/fail-presenter';
 import SuccessScreen from './presenter/success-presenter';
 import ErrorScreen from './presenter/error-presenter';
+import {APP_ID} from './data/game-data';
 
 let questions;
 export default class Application {
@@ -38,9 +39,13 @@ export default class Application {
   }
 
   static showResult(state) {
-    const successScreen = new SuccessScreen(state);
-
-    showScreen(successScreen.element);
+    Loader.saveResults(state, APP_ID)
+      .then(() => Loader.loadResults(APP_ID))
+      .then((statistic) => {
+        const successScreen = new SuccessScreen(state, statistic);
+        showScreen(successScreen.element);
+      })
+      .catch(Application.showError);
   }
 
   static showError(error) {

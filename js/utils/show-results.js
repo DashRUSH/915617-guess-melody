@@ -15,11 +15,10 @@ const showResults = (resultCommon, state) => {
     return ERROR_LIVE;
   }
 
-  const results = resultCommon.concat(state.points);
-  results.sort((left, right) => right - left);
-  const position = results.lastIndexOf(state.points) + 1;
-  const positionPercent = (results.length - position) / results.length * 100;
-  return `Вы заняли ${position} место из ${results.length} игроков. Это лучше, чем у ${positionPercent}% игроков`;
+  resultCommon.sort((left, right) => right - left);
+  const position = resultCommon.lastIndexOf(state.points) + 1;
+  const positionPercent = Math.round((resultCommon.length - position) / resultCommon.length * 100);
+  return `Вы заняли ${position} место из ${resultCommon.length} игроков. Это лучше, чем у ${positionPercent}% игроков`;
 };
 
 export default showResults;

@@ -1,4 +1,4 @@
-import {INITIAL_STATE, COMMON_TIME, FAST_ANSWER, allResults, Points} from '../data/game-data';
+import {INITIAL_STATE, COMMON_TIME, FAST_ANSWER, Points} from '../data/game-data';
 import Timer from '../presenter/timer-presenter';
 
 export default class GameModel {
@@ -57,10 +57,6 @@ export default class GameModel {
       return;
     }
     this._state.points += Points.IS_INCORRECT;
-  }
-
-  getStatistic() {
-    this._state.statistic = allResults;
   }
 
   tick() {
