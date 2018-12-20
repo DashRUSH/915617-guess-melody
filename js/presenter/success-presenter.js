@@ -5,7 +5,7 @@ export default class SuccessScreen {
   constructor(state, statistic) {
     this._view = new SuccessView(state, statistic);
     this._view.bindClickReplay = () => {
-      Application.showWelcome();
+      Application.start();
     };
   }
 

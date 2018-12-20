@@ -5,7 +5,7 @@ export default class ErrorScreen {
   constructor(error) {
     this._view = new ErrorView(error);
     this._view.bindClickReplay = () => {
-      Application.start();
+      Application.showGame();
     };
   }
 

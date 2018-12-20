@@ -5,7 +5,7 @@ export default class FailScreen {
   constructor(type) {
     this._view = new FailView(type);
     this._view.bindClickReplay = () => {
-      Application.start();
+      Application.showGame();
     };
   }
 
