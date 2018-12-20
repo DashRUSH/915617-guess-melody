@@ -20,7 +20,7 @@ export default class TimerView extends AbstractView {
                 stroke-dasharray: ${circumference}; stroke-dashoffset: ${calcTimerArc(this._state.time)} "/>
       </svg>
     
-      <div class="timer__value ${this._isGameEnding(this._state.time) ? `timer__value--finished` : ``}" 
+      <div class="timer__value ${TimerView.isGameEnding(this._state.time) ? `timer__value--finished` : ``}" 
         xmlns="http://www.w3.org/1999/xhtml">
         <span class="timer__mins">${setTime(this._state.time).minutes}</span>
         <span class="timer__dots">:</span>
@@ -29,11 +29,7 @@ export default class TimerView extends AbstractView {
     </div>`;
   }
 
-  get time() {
-    return this._state.time;
-  }
-
-  _isGameEnding(time) {
+  static isGameEnding(time) {
     const ENDING_TIME = 30;
     return time <= ENDING_TIME;
   }

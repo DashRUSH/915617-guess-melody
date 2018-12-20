@@ -79,7 +79,7 @@ export default class GameScreen {
   _startTimer() {
     this.model._timer = setTimeout(() => {
       this.model.tick();
-      const time = this.model.getTime();
+      const time = this.model.time;
       if (time < TIME_IS_EMPTY) {
         this.model.state.fail = `TIME`;
         Application.showFail(this.model.state.fail);
@@ -140,8 +140,8 @@ export default class GameScreen {
     const questions = this.model.questions;
     radioButtons.forEach((radiobutton) => {
       radiobutton.addEventListener(`change`, () => {
-        const isRight = questions[this.model.state.level - 1].options[radiobutton.value].answer;
-        this._checkAnswerArtist(isRight, this.model._time.time);
+        const success = questions[this.model.state.level - 1].options[radiobutton.value].answer;
+        this._checkAnswerArtist(success, this.model._time.time);
       });
     });
   }
@@ -251,5 +251,4 @@ export default class GameScreen {
       this._startTimer();
     };
   }
-
 }

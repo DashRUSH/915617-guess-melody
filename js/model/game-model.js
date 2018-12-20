@@ -3,7 +3,7 @@ import Timer from '../presenter/timer-presenter';
 
 export default class GameModel {
   constructor(questions) {
-    this.start(questions);
+    this._start(questions);
   }
 
   get state() {
@@ -26,7 +26,11 @@ export default class GameModel {
     return this._questions[this._state.level - 1];
   }
 
-  start(questions) {
+  get time() {
+    return this._state.time;
+  }
+
+  _start(questions) {
     this._state = INITIAL_STATE;
     this._questions = questions;
     this._time = new Timer(this._state.time);
@@ -61,9 +65,5 @@ export default class GameModel {
 
   tick() {
     this._state.time = this._time.tick();
-  }
-
-  getTime() {
-    return this._state.time;
   }
 }

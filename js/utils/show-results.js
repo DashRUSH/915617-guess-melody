@@ -1,3 +1,5 @@
+import {TIME_IS_EMPTY} from '../data/game-data';
+
 /**
  * Функция выводит результат игрока
  * @param {array} resultCommon - статистика уже пройденных игр
@@ -7,11 +9,11 @@
 const showResults = (resultCommon, state) => {
   const ERROR_TIME = `Время вышло! Вы не успели отгадать все мелодии`;
   const ERROR_LIVE = `У вас закончились все попытки. Ничего, повезёт в следующий раз!`;
-  if (state.time === 0) {
+  if (state.time === TIME_IS_EMPTY) {
     return ERROR_TIME;
   }
 
-  if (state.activeAttempt === 0) {
+  if (!state.activeAttempt) {
     return ERROR_LIVE;
   }
 
