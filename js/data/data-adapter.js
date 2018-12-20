@@ -1,14 +1,17 @@
 const adaptServerData = (data) => {
-  return data.map((level) => {
-    switch (level.type) {
-      case `artist`:
-        return preprocessQuestionArtist(level);
-      case `genre`:
-        return preprocessQuestionGenre(level);
-      default:
-        throw new Error(`Неизвестный тип: ${level.type}`);
-    }
-  });
+  return {
+    questions: data.map((level) => {
+      switch (level.type) {
+        case `artist`:
+          return preprocessQuestionArtist(level);
+        case `genre`:
+          return preprocessQuestionGenre(level);
+        default:
+          throw new Error(`Неизвестный тип: ${level.type}`);
+      }
+    }),
+    audios: getAudio(data)
+  };
 };
 
 const preprocessQuestionArtist = (level) => {
@@ -35,6 +38,25 @@ const preprocessQuestionGenre = (level) => {
     title: level.question,
     options
   };
+};
+
+const getAudio = (data) => {
+  const audios = [];
+  data.map((level) => {
+    switch (level.type) {
+      case `artist`:
+        audios.push(level.src);
+        return;
+      case `genre`:
+        level.answers.map((options) => {
+          audios.push(options.src);
+        });
+        return;
+      default:
+        throw new Error(`Неизвестный тип: ${level.type}`);
+    }
+  });
+  return audios;
 };
 
 export default adaptServerData;
