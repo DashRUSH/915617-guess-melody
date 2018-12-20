@@ -3,6 +3,7 @@ import GameView from '../views/game-view';
 import TimerView from '../views/timer-view';
 import ArtistView from '../views/artist-view';
 import GenreView from '../views/genre-view';
+import ConfirmView from '../views/confirm-view';
 import {ONE_SECOND, TIME_IS_EMPTY} from '../data/game-data';
 import showScreen from '../utils/show-screen';
 
@@ -145,19 +146,6 @@ export default class GameScreen {
     });
   }
 
-  _bindClickReplyLink() {
-    const linkReply = this.element.querySelector(`.game__back`);
-    if (!linkReply) {
-      return;
-    }
-
-    linkReply.addEventListener(`click`, (event) => {
-      event.preventDefault();
-      this._stopTimer();
-      Application.start();
-    });
-  }
-
   _checkAnswerGenre(answers, time) {
     let result = true;
     let resultCount = 0;
@@ -239,4 +227,29 @@ export default class GameScreen {
     button.classList.add(this._classPlay);
     button.classList.remove(this._classPause);
   }
+
+  _bindClickReplyLink() {
+    const linkReply = this.element.querySelector(`.game__back`);
+    if (!linkReply) {
+      return;
+    }
+
+    const confirmView = new ConfirmView();
+    linkReply.addEventListener(`click`, (event) => {
+      event.preventDefault();
+      this._stopTimer();
+      showScreen(confirmView.element);
+    });
+
+    confirmView.bindClickReplay = () => {
+      Application.showWelcome();
+    };
+
+    confirmView.bindClickCancel = () => {
+      this._selectScreen();
+      this._updateTimer();
+      this._startTimer();
+    };
+  }
+
 }
