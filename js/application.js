@@ -65,7 +65,8 @@ export default class Application {
       .then(() => {
         const failScreen = new FailScreen(type);
         showScreen(failScreen.element);
-      });
+      })
+      .catch(Application.showError);
   }
 
   static showResult(state) {
