@@ -60,10 +60,12 @@ export default class Application {
     showScreen(gameScreen.element);
   }
 
-  static showFail(type) {
-    const failScreen = new FailScreen(type);
-
-    showScreen(failScreen.element);
+  static showFail(type, state) {
+    Loader.saveResults(state, APP_ID)
+      .then(() => {
+        const failScreen = new FailScreen(type);
+        showScreen(failScreen.element);
+      });
   }
 
   static showResult(state) {

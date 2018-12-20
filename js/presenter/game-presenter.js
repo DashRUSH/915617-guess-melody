@@ -36,7 +36,7 @@ export default class GameScreen {
     const currentQuestion = this.model.question;
     if (!lives) {
       this.model.state.fail = `TRIES`;
-      Application.showFail(this.model.state.fail);
+      Application.showFail(this.model.state.fail, this.model.state);
       return;
     }
     if (!level) {
