@@ -15,6 +15,7 @@ let audiosLength = 0;
 let audiosLoaded = 0;
 export default class Application {
   static start() {
+    audiosLoaded = 0;
     Application.showPreloader();
     Loader.loadData()
       .then((data) => {

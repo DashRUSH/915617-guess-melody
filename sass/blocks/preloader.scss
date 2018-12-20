@@ -6,11 +6,12 @@
 
 .seq-preloader {
   position: absolute;
-  left: 350px;
   top: 420px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100px;
   height: 140px;
-  background-color: $color-beige;
+  background-color: rgba($color-beige, 0.5);
 
   svg {
     fill: $color-orange;

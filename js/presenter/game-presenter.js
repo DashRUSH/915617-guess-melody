@@ -9,24 +9,27 @@ import showScreen from '../utils/show-screen';
 export default class GameScreen {
   constructor(model) {
     this.model = model;
-    this.setScreenView();
+    this._timerOn = 0;
+    this._classPlay = `track__button--play`;
+    this._classPause = `track__button--pause`;
+    this._setScreenView();
   }
 
   get element() {
     return this._view.element;
   }
 
-  setScreenView() {
+  _setScreenView() {
     this.model.changeLevel();
-    this.selectScreen();
+    this._selectScreen();
   }
 
-  selectScreen() {
-    this.setScreen();
+  _selectScreen() {
+    this._setScreen();
     this.bindEvents();
   }
 
-  setScreen() {
+  _setScreen() {
     const lives = this.model.state.lives;
     const level = this.model.level;
     const questions = this.model.questions;
@@ -41,13 +44,13 @@ export default class GameScreen {
       return;
     }
     if (level <= questions.length) {
-      this.selectQuestionScreen(currentQuestion);
+      this._selectQuestionScreen(currentQuestion);
       return;
     }
     Application.showResult(this.model.state);
   }
 
-  selectQuestionScreen(question) {
+  _selectQuestionScreen(question) {
     switch (question.type) {
       case `artist`:
         this._questionScreen = new ArtistView(this.model, question).template;
@@ -56,21 +59,23 @@ export default class GameScreen {
         this._questionScreen = new GenreView(this.model, question).template;
         break;
     }
-    this.showQuestionScreen(this.model.state, this._questionScreen, question.type);
+    this._showQuestionScreen(this.model.state, this._questionScreen, question.type);
   }
 
-  showQuestionScreen(state, questionScreen, type) {
+  _showQuestionScreen(state, questionScreen, type) {
     this._view = new GameView(state, questionScreen, type);
     showScreen(this._view.element);
-    this.startTimer();
+    if (!this._timerOn) {
+      this._startTimer();
+    }
+    this._timerOn = 1;
   }
 
-  changeScreen() {
-    this.stopTimer();
-    this.selectScreen();
+  _changeScreen() {
+    this._selectScreen();
   }
 
-  startTimer() {
+  _startTimer() {
     this.model._timer = setTimeout(() => {
       this.model.tick();
       const time = this.model.getTime();
@@ -78,17 +83,17 @@ export default class GameScreen {
         this.model.state.fail = `TIME`;
         Application.showFail(this.model.state.fail);
       } else {
-        this.startTimer();
-        this.updateTimer();
+        this._startTimer();
+        this._updateTimer();
       }
     }, ONE_SECOND);
   }
 
-  stopTimer() {
+  _stopTimer() {
     clearTimeout(this.model._timer);
   }
 
-  updateTimer() {
+  _updateTimer() {
     const oldTimer = this._view.element.querySelector(`.j-timer`);
     const header = oldTimer.parentNode;
     const newTimer = new TimerView(this.model._time).element;
@@ -96,12 +101,13 @@ export default class GameScreen {
   }
 
   bindEvents() {
-    this.bindEventsGenre();
-    this.bindEventsArtist();
-    this.bindClickReplyLink();
+    this._bindEventsGenre();
+    this._bindEventsArtist();
+    this._bindClickReplyLink();
+    this._bindClickAudioButton();
   }
 
-  bindEventsGenre() {
+  _bindEventsGenre() {
     const genreForm = this.element.querySelector(`.j-genre-form`);
     if (!genreForm) {
       return;
@@ -120,11 +126,11 @@ export default class GameScreen {
     buttonAnswer.addEventListener(`click`, (event) => {
       event.preventDefault();
       const answers = Array.from(checkedCheckboxes);
-      this.checkAnswerGenre(answers, this.model._time.time);
+      this._checkAnswerGenre(answers, this.model._time.time);
     });
   }
 
-  bindEventsArtist() {
+  _bindEventsArtist() {
     const radioButtons = this.element.querySelectorAll(`.j-artist-answer`);
     if (!radioButtons) {
       return;
@@ -134,12 +140,12 @@ export default class GameScreen {
     radioButtons.forEach((radiobutton) => {
       radiobutton.addEventListener(`change`, () => {
         const isRight = questions[this.model.state.level - 1].options[radiobutton.value].answer;
-        this.checkAnswerArtist(isRight, this.model._time.time);
+        this._checkAnswerArtist(isRight, this.model._time.time);
       });
     });
   }
 
-  bindClickReplyLink() {
+  _bindClickReplyLink() {
     const linkReply = this.element.querySelector(`.game__back`);
     if (!linkReply) {
       return;
@@ -147,12 +153,12 @@ export default class GameScreen {
 
     linkReply.addEventListener(`click`, (event) => {
       event.preventDefault();
-      this.stopTimer();
+      this._stopTimer();
       Application.start();
     });
   }
 
-  checkAnswerGenre(answers, time) {
+  _checkAnswerGenre(answers, time) {
     let result = true;
     let resultCount = 0;
     let answerCount = 0;
@@ -175,19 +181,62 @@ export default class GameScreen {
       this.model.changeLives();
     }
 
-    this.showNextLevel(success, time);
+    this._showNextLevel(success, time);
   }
 
-  checkAnswerArtist(success, time) {
+  _checkAnswerArtist(success, time) {
     if (!success) {
       this.model.changeLives();
     }
-    this.showNextLevel(success, time);
+    this._showNextLevel(success, time);
   }
 
-  showNextLevel(success, time) {
+  _showNextLevel(success, time) {
     this.model.calcPoints(success, time);
     this.model.changeLevel();
-    this.changeScreen();
+    this._changeScreen();
+  }
+
+  _bindClickAudioButton() {
+    const buttonsPlay = this.element.querySelectorAll(`.track__button`);
+    if (!buttonsPlay) {
+      return;
+    }
+
+    this._playAudio(buttonsPlay[0], buttonsPlay[0].parentNode.querySelector(`audio`));
+
+    buttonsPlay.forEach((buttonPlay) => {
+      buttonPlay.addEventListener(`click`, (event) => {
+        const buttonClicked = event.currentTarget;
+        const audioCurrent = buttonClicked.parentNode.querySelector(`audio`);
+        const method = buttonClicked.classList.contains(this._classPlay) ? `_playAudio` : `_pauseAudio`;
+        this[method](buttonClicked, audioCurrent);
+
+        buttonsPlay.forEach((button) => {
+          if (button !== buttonClicked && method === `_playAudio`) {
+            this._pauseAudio(button, button.parentNode.querySelector(`audio`));
+          }
+        });
+      });
+    });
+  }
+
+  _playAudio(button, audio) {
+    const promisePlay = audio.play();
+
+    promisePlay
+      .then(() => {
+        button.classList.add(this._classPause);
+        button.classList.remove(this._classPlay);
+      })
+      .catch(() => {
+        audio.pause();
+      });
+  }
+
+  _pauseAudio(button, audio) {
+    audio.pause();
+    button.classList.add(this._classPlay);
+    button.classList.remove(this._classPause);
   }
 }
