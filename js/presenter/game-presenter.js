@@ -198,13 +198,8 @@ export default class GameScreen {
         const buttonClicked = event.currentTarget;
         const audioCurrent = buttonClicked.parentNode.querySelector(`audio`);
         const method = buttonClicked.classList.contains(this._classPlay) ? `_playAudio` : `_pauseAudio`;
+        this._pausePreviousAudio(buttonsPlay, buttonClicked, method);
         this[method](buttonClicked, audioCurrent);
-
-        buttonsPlay.forEach((button) => {
-          if (button !== buttonClicked && method === `_playAudio`) {
-            this._pauseAudio(button, button.parentNode.querySelector(`audio`));
-          }
-        });
       });
     });
   }
@@ -226,6 +221,14 @@ export default class GameScreen {
     audio.pause();
     button.classList.add(this._classPlay);
     button.classList.remove(this._classPause);
+  }
+
+  _pausePreviousAudio(buttons, buttonCurrent, method) {
+    buttons.forEach((button) => {
+      if (button !== buttonCurrent && method === `_playAudio`) {
+        this._pauseAudio(button, button.parentNode.querySelector(`audio`));
+      }
+    });
   }
 
   _bindClickReplyLink() {
