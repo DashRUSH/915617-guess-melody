@@ -7,19 +7,9 @@ export default class ErrorView extends AbstractView {
   }
 
   get template() {
-    return `<section class="result result--fail">
-    <div class="result__logo"><img src="img/melody-logo.png" alt="Угадай мелодию" width="186" height="83"></div>
-    <h2 class="result__title">Упс! Возникла ошибка:</h2>
-    <p class="result__total result__total--fail">${this._error}</p>
-    <button class="result__replay" type="button">Попробовать ещё раз</button>
+    return `<section class="modal">
+    <h2 class="modal__title">Произошла ошибка!</h2>
+    <p class="modal__text">Статус: ${this._error.message}. Пожалуйста, перезагрузите страницу.</p>
   </section>`;
   }
-
-  bindEvents() {
-    const buttonReplay = this.element.querySelector(`.result__replay`);
-
-    buttonReplay.addEventListener(`click`, () => this.bindClickReplay());
-  }
-
-  bindClickReplay() {}
 }
