@@ -49,9 +49,9 @@ export default class GameModel {
   }
 
   calcPoints(success, time) {
+    const timeDiff = this._answerTime[this._state.level - 1] - time;
+    this._answerTime.push(time);
     if (success) {
-      const timeDiff = this._answerTime[this._state.level - 1] - time;
-      this._answerTime.push(time);
       if (timeDiff < FAST_ANSWER) {
         this._state.points += Points.IS_FAST;
         this._state.fast++;

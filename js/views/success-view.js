@@ -8,7 +8,7 @@ export default class SuccessView extends AbstractView {
   constructor(state, statistic) {
     super();
     this.state = state;
-    this.statistic = this.parseStatistic(statistic);
+    this.statistic = SuccessView.parseStatistic(statistic);
     this._errors = LIVES - this.state.lives;
     this._usetTime = setTime(COMMON_TIME - this.state.time);
     this._userMinutes = this._usetTime.minutes === `00` ? `` :
@@ -39,7 +39,7 @@ export default class SuccessView extends AbstractView {
 
   bindClickReplay() {}
 
-  parseStatistic(statistic) {
+  static parseStatistic(statistic) {
     return statistic.map((player) => {
       return player.points;
     });

@@ -6,7 +6,6 @@ export default class PanelView extends AbstractView {
   constructor(state) {
     super();
     this._state = state;
-    this._radius = 370;
     this._timer = new TimerView(this._state).template;
   }
 
