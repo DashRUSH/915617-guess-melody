@@ -13,7 +13,7 @@ const showResults = (resultCommon, state) => {
     return ERROR_TIME;
   }
 
-  if (!state.activeAttempt) {
+  if (state.activeAttempt === 0) {
     return ERROR_LIVE;
   }
 
