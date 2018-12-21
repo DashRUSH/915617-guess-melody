@@ -153,11 +153,9 @@ export default class GameScreen {
     const questions = this.model.questions;
     const answersAll = questions[this.model.state.level - 1].options;
 
-    for (const answer of answersAll) {
-      if (answer.answer) {
-        answerCount++;
-      }
-    }
+    answersAll.map((answer) => {
+      answerCount += answer.answer;
+    });
 
     answers.forEach((answer) => {
       resultCount += questions[this.model.state.level - 1].options[answer.value].answer;
