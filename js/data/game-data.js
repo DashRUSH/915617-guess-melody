@@ -1,4 +1,4 @@
-export const APP_ID = 22101985;
+export const APP_ID = 22101987;
 export const COMMON_TIME = 300;
 export const TIME_IS_EMPTY = 0;
 export const LIVES = 3;
