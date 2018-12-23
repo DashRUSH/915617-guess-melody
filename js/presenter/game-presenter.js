@@ -202,17 +202,14 @@ export default class GameScreen {
     });
   }
 
-  _playAudio(button, audio) {
-    const promisePlay = audio.play();
-
-    promisePlay
-      .then(() => {
-        button.classList.add(this._classPause);
-        button.classList.remove(this._classPlay);
-      })
-      .catch(() => {
-        audio.pause();
-      });
+  async _playAudio(button, audio) {
+    try {
+      await audio.play();
+      button.classList.add(this._classPause);
+      button.classList.remove(this._classPlay);
+    } catch (error) {
+      audio.pause();
+    }
   }
 
   _pauseAudio(button, audio) {

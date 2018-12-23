@@ -4,18 +4,20 @@ import checkStatus from '../utils/check-status';
 import toJSON from '../utils/to-json';
 
 export default class Loader {
-  static loadData() {
-    return fetch(`${SERVER_URL}/questions`)
-      .then(checkStatus)
-      .then(toJSON)
-      .then(adaptServerData);
+  static async loadData() {
+    const response = await fetch(`${SERVER_URL}/questions`);
+    const responseChecked = await checkStatus(response);
+    const responseToJSON = await toJSON(responseChecked);
+    return adaptServerData(responseToJSON);
   }
 
-  static loadResults(id = APP_ID) {
-    return fetch(`${SERVER_URL}/stats/:${id}`).then(checkStatus).then(toJSON);
+  static async loadResults(id = APP_ID) {
+    const response = await fetch(`${SERVER_URL}/stats/:${id}`);
+    const responseChecked = await checkStatus(response);
+    return toJSON(responseChecked);
   }
 
-  static saveResults(data, id = APP_ID) {
+  static async saveResults(data, id = APP_ID) {
     const requestSettings = {
       body: JSON.stringify(data),
       headers: {
@@ -23,6 +25,7 @@ export default class Loader {
       },
       method: `POST`
     };
-    return fetch(`${SERVER_URL}/stats/:${id}`, requestSettings).then(checkStatus);
+    const response = await fetch(`${SERVER_URL}/stats/:${id}`, requestSettings);
+    return checkStatus(response);
   }
 }

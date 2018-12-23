@@ -14,24 +14,21 @@ let questions;
 let audiosLength = 0;
 let audiosLoaded = 0;
 export default class Application {
-  static start() {
+  static async start() {
     audiosLoaded = 0;
     Application.showPreloader();
-    Loader.loadData()
-      .then((data) => {
-        questions = data.questions;
-        return data.audios;
-      })
-      .then((audios) => {
-        audiosLength = audios.length;
-        audios.map((audio) => {
-          loadAudios(audio, Application.checkAudioLoad);
-        });
-      })
-      .then((audioPromises) => {
-        Promise.all(audioPromises);
-      })
-      .catch(Application.showError);
+    try {
+      const data = await Loader.loadData();
+      questions = data.questions;
+      const audios = data.audios;
+      audiosLength = audios.length;
+      const audioPromises = audios.map((audio) => {
+        return loadAudios(audio, Application.checkAudioLoad);
+      });
+      await Promise.all(audioPromises);
+    } catch (error) {
+      Application.showError(error);
+    }
   }
 
   static showPreloader() {
@@ -60,23 +57,25 @@ export default class Application {
     showScreen(gameScreen.element);
   }
 
-  static showFail(type, state) {
-    Loader.saveResults(state, APP_ID)
-      .then(() => {
-        const failScreen = new FailScreen(type);
-        showScreen(failScreen.element);
-      })
-      .catch(Application.showError);
+  static async showFail(type, state) {
+    try {
+      await Loader.saveResults(state, APP_ID);
+      const failScreen = new FailScreen(type);
+      showScreen(failScreen.element);
+    } catch (error) {
+      Application.showError(error);
+    }
   }
 
-  static showResult(state) {
-    Loader.saveResults(state, APP_ID)
-      .then(() => Loader.loadResults(APP_ID))
-      .then((statistic) => {
-        const successScreen = new SuccessScreen(state, statistic);
-        showScreen(successScreen.element);
-      })
-      .catch(Application.showError);
+  static async showResult(state) {
+    try {
+      await Loader.saveResults(state, APP_ID);
+      const statistic = await Loader.loadResults(APP_ID);
+      const successScreen = new SuccessScreen(state, statistic);
+      showScreen(successScreen.element);
+    } catch (error) {
+      Application.showError(error);
+    }
   }
 
   static showError(error) {
